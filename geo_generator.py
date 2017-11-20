@@ -13,6 +13,7 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=10.
     table_included = True
     post_included = False
     center_included = False
+    fluid_included = True
 
     sample_surface_centered = True
 
@@ -54,8 +55,16 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=10.
     world = GS.boxVolume('world', 400, 400, 400)
     world.mother = ''
     world.invisible = 1
-    world.material = substance
+    world.material = "air"
+    world.center = {'x':0.,'y':0.,'z':0.}
     masterString = world.writeToString(masterString)
+
+    if fluid_included:
+        fluid = GS.tubeVolume("fluid", tube_radius - tube_wall_width, tube_height)
+        fluid.colorVect = [0.4, 0.4, 0.994216568893, 0.2]
+        fluid.center = {'x': 0. + laser_offset, 'y': 0., 'z': 0.}
+        fluid.material = substance
+        masterString = fluid.writeToString(masterString)
 
     if tube_included:
         sapphire_tube = GS.tubeVolume("sapphire_tube", tube_radius, tube_height, tube_radius - tube_wall_width)
@@ -66,23 +75,23 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=10.
 
     if sample_included:
         sample = GS.tubeVolume('sample', sample_radius, sample_thickness)
+        sample.mother = fluid.name
         sample.colorVect = [0.976892196027, 0.408361008099, 0.504698048762, 0.8]
         if not sample_surface_centered:
-            sample.center = {'x': 0, 'y': 0, 'z': 0}
+            sample.center = {'x': 0 + laser_offset, 'y': 0, 'z': 0}
         else:
             sample.center = {'x': -sample_thickness / 2 * math.sin(theta_i * math.pi / 180) + laser_offset, 'y': sample_thickness / 2 * math.cos(theta_i * math.pi / 180), 'z': 0}
         sample.rotation = [90, theta_i, 0]
         sample.material = 'mirror'
         masterString = sample.writeToString(masterString)
 
-        outer_sample_surface = GS.border("outer_sample_surface", world.name, sample.name)
+        outer_sample_surface = GS.border("outer_sample_surface", fluid.name, sample.name)
         outer_sample_surface.surface = "mirror"
         masterString = outer_sample_surface.writeToString(masterString)
 
-        inner_sample_surface = GS.border("inner_sample_surface", sample.name, world.name)
+        inner_sample_surface = GS.border("inner_sample_surface", sample.name, fluid.name)
         inner_sample_surface.surface = "mirror"
         masterString = inner_sample_surface.writeToString(masterString)
-
 
     if center_included:
         center = GS.tubeVolume('center', 0.02, 4)

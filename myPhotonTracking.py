@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_output(theta_i, laser_offset):  # offset in inches, should be x-coord of center of PMT axis
+def plot_output(theta_i=45, laser_offset=0., show_position=False, x_min=-100., x_max=100., y_min=-100., y_max=100., substance="air", show=True):  # offset in inches, should be x-coord of center of PMT axis
 
     # Get command line arguments
     cmdArgs = sys.argv
@@ -16,7 +16,6 @@ def plot_output(theta_i, laser_offset):  # offset in inches, should be x-coord o
     file_name = '~/Desktop/RAT_files/error_analysis/output.root'
 
     fileIterator = rat.dsreader(file_name)
-
     print_all_steps = False
     if print_all_steps:
         for iEntry, anEntry in enumerate(fileIterator):
@@ -83,15 +82,15 @@ def plot_output(theta_i, laser_offset):  # offset in inches, should be x-coord o
         theta = [0.]
     else:
 
-        """
-        plt.figure()
-        plt.hist2d(y, z, bins=40, norm=LogNorm())
-        plt.xlabel("y")
-        plt.ylabel("z")
-        plt.gca().invert_xaxis()
-        plt.colorbar()
-        plt.title("position unzeroed")
-        """
+        if show_position:
+            plt.figure()
+            plt.hist2d(y, z, bins=40, norm=LogNorm())
+            plt.xlabel("y")
+            plt.ylabel("z")
+            plt.gca().invert_xaxis()
+            plt.colorbar()
+            plt.title("position unzeroed")
+
 
         r = []
         phi = []  # horizontal, 0 at x = 1, y=0, z=0
@@ -112,12 +111,24 @@ def plot_output(theta_i, laser_offset):  # offset in inches, should be x-coord o
 
         phi_zeroed = [phi_ - phi_specular for phi_ in phi]
 
+        x = []
+        y = []
+        for i in range(len(phi_zeroed)):
+            if x_min < phi_zeroed[i] < x_max and y_min < theta[i] < y_max:
+                x.append(phi_zeroed[i])
+                y.append(theta[i])
+
+        string = "theta_i: " + str(theta_i) + "\nsubstance: " + str(substance) + "\nlaser offset: " + str(laser_offset)
+
         plt.figure()
-        plt.hist2d(phi_zeroed, theta, bins=40, norm=LogNorm())
+        plt.hist2d(x, y, bins=40, norm=LogNorm())
         plt.xlabel("Delta phi (horizontal)")
         plt.ylabel("Delta theta (vertical)")
         plt.gca().invert_xaxis()
         plt.colorbar()
+        box = dict(boxstyle='round', facecolor='white', alpha=0.8)
+        plt.annotate(string, xy=(0.05, 0.05), xycoords="axes fraction", bbox=box)
         plt.title("angular zeroed")
 
-        plt.show()
+        if show:
+            plt.show()
