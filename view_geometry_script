@@ -1,0 +1,5 @@
+cd ~/Desktop/RAT_files/error_analysis
+
+cp error_analysis.geo ~/Desktop/RAT/rat-pac/data/error_analysis
+
+rat error_analysis.mac
