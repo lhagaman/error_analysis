@@ -15,7 +15,7 @@
 /tracking/storeTrajectory 1
 
 /generator/add combo gun2:point
-/generator/vtx/set opticalphoton  0  1  0 1 0.00000306 0.00000306
+/generator/vtx/set opticalphoton  0  1  0 0.25 0.00000306 0.00000306
 /generator/pos/set 0 -127 0
 
 /run/beamOn 50000

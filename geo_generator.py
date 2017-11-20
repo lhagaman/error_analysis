@@ -5,7 +5,7 @@ import numpy as np
 geoFileName = './error_analysis.geo'
 
 
-def make_geometry(theta_i, substance="air", tube_included=True, angular_size=10):
+def make_geometry(theta_i, substance="air", tube_included=True, angular_size=10., laser_offset=0.):
 
     sample_included = True
     tube_caps_included = False
@@ -60,7 +60,7 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=10)
     if tube_included:
         sapphire_tube = GS.tubeVolume("sapphire_tube", tube_radius, tube_height, tube_radius - tube_wall_width)
         sapphire_tube.colorVect = [0.658954714849, 0.802189023832, 0.994216568893, 0.2]
-        sapphire_tube.center = {'x': 0, 'y': 0, 'z': 0}
+        sapphire_tube.center = {'x': 0. + laser_offset, 'y': 0., 'z': 0.}
         sapphire_tube.material = 'sapphire'
         masterString = sapphire_tube.writeToString(masterString)
 
@@ -70,7 +70,7 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=10)
         if not sample_surface_centered:
             sample.center = {'x': 0, 'y': 0, 'z': 0}
         else:
-            sample.center = {'x': -sample_thickness / 2 * math.sin(theta_i * math.pi / 180), 'y': sample_thickness / 2 * math.cos(theta_i * math.pi / 180), 'z': 0}
+            sample.center = {'x': -sample_thickness / 2 * math.sin(theta_i * math.pi / 180) + laser_offset, 'y': sample_thickness / 2 * math.cos(theta_i * math.pi / 180), 'z': 0}
         sample.rotation = [90, theta_i, 0]
         sample.material = 'mirror'
         masterString = sample.writeToString(masterString)
@@ -151,6 +151,8 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=10)
         surface = GS.tubeVolume('coherent_surface', collecting_surface_distance + collecting_surface_thickness, height,
                                 collecting_surface_distance, (360. + 2. * theta_i - 90. - angular_size / 2.) % 360.,
                                 angular_size)
+
+        surface.center["x"] = laser_offset
 
         """
         surface = GS.sphereVolume('coherent_surface', collecting_surface_distance + collecting_surface_thickness,

@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_output(theta_i):  #distance in inches
+def plot_output(theta_i, laser_offset):  # offset in inches, should be x-coord of center of PMT axis
 
     # Get command line arguments
     cmdArgs = sys.argv
@@ -70,46 +70,54 @@ def plot_output(theta_i):  #distance in inches
             volume_string = str(volume)
             endpoint = step.GetEndpoint()
             if volume_string == "coherent_surface":
-                x.append(endpoint[0])
+                x.append(endpoint[0] - 25.4 * laser_offset)
                 y.append(endpoint[1])
                 z.append(endpoint[2])
 
-    """
-    plt.figure()
-    plt.hist2d(y, z, bins=40, norm=LogNorm())
-    plt.xlabel("y")
-    plt.ylabel("z")
-    plt.colorbar()
-    plt.title("position unzeroed")
-    """
-
-    r = []
-    phi = []  # horizontal, 0 at x = 1, y=0, z=0
-    theta = []  # vertical, 0 at z=0
-    for i in range(len(x)):
-        r.append(np.sqrt(x[i] ** 2 + y[i] ** 2 + z[i] ** 2))
-        phi.append(180. / np.pi * np.arctan2(y[i], x[i]))
-        theta.append(180. / np.pi * np.arctan2(z[i], np.sqrt(x[i] ** 2 + y[i] ** 2)))
-
-    """
-    plt.figure()
-    plt.hist2d(phi, theta, bins=40, norm=LogNorm())
-    plt.xlabel("phi (horizontal)")
-    plt.ylabel("theta (vertical)")
-    plt.colorbar()
-    plt.title("angular unzeroed")
-    """
-
     phi_specular = 2. * theta_i - 90.
-    print(phi_specular)
-    phi_zeroed = [phi_ - phi_specular for phi_ in phi]
 
-    plt.figure()
-    plt.hist2d(phi_zeroed, theta, bins=40, norm=LogNorm())
-    plt.xlabel("Delta phi (horizontal)")
-    plt.ylabel("Delta theta (vertical)")
-    plt.colorbar()
-    plt.title("angular zeroed")
+    if len(x) == 0:
+        print("NO PHOTONS")
+        r = [1.]
+        phi = [phi_specular]
+        theta = [0.]
+    else:
 
-    plt.show()
+        """
+        plt.figure()
+        plt.hist2d(y, z, bins=40, norm=LogNorm())
+        plt.xlabel("y")
+        plt.ylabel("z")
+        plt.gca().invert_xaxis()
+        plt.colorbar()
+        plt.title("position unzeroed")
+        """
 
+        r = []
+        phi = []  # horizontal, 0 at x = 1, y=0, z=0
+        theta = []  # vertical, 0 at z=0
+        for i in range(len(x)):
+            r.append(np.sqrt(x[i] ** 2 + y[i] ** 2 + z[i] ** 2))
+            phi.append(180. / np.pi * np.arctan2(y[i], x[i]))
+            theta.append(180. / np.pi * np.arctan2(z[i], np.sqrt(x[i] ** 2 + y[i] ** 2)))
+
+        """
+        plt.figure()
+        plt.hist2d(phi, theta, bins=40, norm=LogNorm())
+        plt.xlabel("phi (horizontal)")
+        plt.ylabel("theta (vertical)")
+        plt.colorbar()
+        plt.title("angular unzeroed")
+        """
+
+        phi_zeroed = [phi_ - phi_specular for phi_ in phi]
+
+        plt.figure()
+        plt.hist2d(phi_zeroed, theta, bins=40, norm=LogNorm())
+        plt.xlabel("Delta phi (horizontal)")
+        plt.ylabel("Delta theta (vertical)")
+        plt.gca().invert_xaxis()
+        plt.colorbar()
+        plt.title("angular zeroed")
+
+        plt.show()
