@@ -5,7 +5,7 @@ import numpy as np
 geoFileName = './error_analysis.geo'
 
 
-def make_geometry(theta_i, substance="air", tube_included=True, angular_size=10., laser_offset=0.):
+def make_geometry(theta_i, substance="air", tube_included=True, angular_size=10., laser_offset=0., sample_x=0., sample_y=0.):
 
     sample_included = True
     tube_caps_included = False
@@ -78,9 +78,9 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=10.
         sample.mother = fluid.name
         sample.colorVect = [0.976892196027, 0.408361008099, 0.504698048762, 0.8]
         if not sample_surface_centered:
-            sample.center = {'x': 0 + laser_offset, 'y': 0, 'z': 0}
+            sample.center = {'x': sample_x, 'y': sample_y, 'z': 0}
         else:
-            sample.center = {'x': -sample_thickness / 2 * math.sin(theta_i * math.pi / 180) + laser_offset, 'y': sample_thickness / 2 * math.cos(theta_i * math.pi / 180), 'z': 0}
+            sample.center = {'x': -sample_thickness / 2 * math.sin(theta_i * math.pi / 180) + sample_x, 'y': sample_thickness / 2 * math.cos(theta_i * math.pi / 180) + sample_y, 'z': 0}
         sample.rotation = [90, theta_i, 0]
         sample.material = 'mirror'
         masterString = sample.writeToString(masterString)

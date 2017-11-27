@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_output(theta_i=45, laser_offset=0., show_position=False, x_min=-100., x_max=100., y_min=-100., y_max=100., substance="air", show=True):  # offset in inches, should be x-coord of center of PMT axis
+def plot_output(name="", theta_i=45, laser_offset=0., sample_x=0., sample_y=0., show_position=False, x_min=-100., x_max=100., y_min=-100., y_max=100., substance="air", show=True):  # offset in inches, should be x-coord of center of PMT axis
 
     # Get command line arguments
     cmdArgs = sys.argv
@@ -69,7 +69,7 @@ def plot_output(theta_i=45, laser_offset=0., show_position=False, x_min=-100., x
             volume_string = str(volume)
             endpoint = step.GetEndpoint()
             if volume_string == "coherent_surface":
-                x.append(endpoint[0] - 25.4 * laser_offset)
+                x.append(endpoint[0])
                 y.append(endpoint[1])
                 z.append(endpoint[2])
 
@@ -77,9 +77,6 @@ def plot_output(theta_i=45, laser_offset=0., show_position=False, x_min=-100., x
 
     if len(x) == 0:
         print("NO PHOTONS")
-        r = [1.]
-        phi = [phi_specular]
-        theta = [0.]
     else:
 
         if show_position:
@@ -118,17 +115,25 @@ def plot_output(theta_i=45, laser_offset=0., show_position=False, x_min=-100., x
                 x.append(phi_zeroed[i])
                 y.append(theta[i])
 
-        string = "theta_i: " + str(theta_i) + "\nsubstance: " + str(substance) + "\nlaser offset: " + str(laser_offset)
+        string = "theta_i: " + str(theta_i)
+        string += "\nsubstance: " + str(substance)
+        string += "\nlaser offset: " + str(laser_offset) + " mm"
+        string += "\nsample_x: " + str(25.4 * sample_x) + " mm"
+        string += "\nsample_y: " + str(25.4 * sample_y) + " mm"
 
-        plt.figure()
-        plt.hist2d(x, y, bins=40, norm=LogNorm())
-        plt.xlabel("Delta phi (horizontal)")
-        plt.ylabel("Delta theta (vertical)")
-        plt.gca().invert_xaxis()
-        plt.colorbar()
-        box = dict(boxstyle='round', facecolor='white', alpha=0.8)
-        plt.annotate(string, xy=(0.05, 0.05), xycoords="axes fraction", bbox=box)
-        plt.title("angular zeroed")
+        if len(x) == 0:
+            print("NO PHOTONS IN GIVEN RANGE")
+        else:
 
-        if show:
-            plt.show()
+            plt.figure()
+            plt.hist2d(x, y, bins=40, norm=LogNorm())
+            plt.xlabel("Change In Horizontal Angle")
+            plt.ylabel("Change In Vertical Angle")
+            plt.gca().invert_xaxis()
+            plt.colorbar()
+            box = dict(boxstyle='round', facecolor='white', alpha=0.8)
+            plt.annotate(string, xy=(0.05, 0.05), xycoords="axes fraction", bbox=box)
+            plt.title(name)
+
+            if show:
+                plt.show()
