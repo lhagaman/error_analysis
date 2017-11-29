@@ -4,12 +4,14 @@ from geo_generator import make_geometry
 from myPhotonTracking import plot_output
 
 
-def run_rat(name="", num_photons=50000, theta_i=45, substance="air", wavelength=405., sample_x=0., sample_y=0., laser_distance=5., tube_included=True, angular_size=10., laser_offset=0., show=False, run=False, x_min=-100., x_max=100., y_min=-100., y_max=100.,):
+def run_rat(name="", num_photons=50000, theta_i=45, substance="air", wavelength=405., sample_x=0., sample_y=0.,
+            cell_x=0., cell_y=0.,  laser_distance=5., tube_included=True, angular_size=10., laser_offset=0.,
+            show=False, run=False, x_min=-100., x_max=100., y_min=-100., y_max=100.,):
 
     if run:
 
         make_geometry(theta_i=theta_i, substance=substance, sample_x=sample_x, sample_y=sample_y,
-                      tube_included=tube_included, angular_size=angular_size, laser_offset=laser_offset)
+                      cell_x=cell_x, cell_y=cell_y, laser_offset=laser_offset, tube_included=tube_included, angular_size=angular_size)
 
         mac_file_name = "./photon_gun.mac"
 
@@ -44,5 +46,6 @@ def run_rat(name="", num_photons=50000, theta_i=45, substance="air", wavelength=
         str_2 += "rat photon_gun.mac"
         os.system(str_2)
 
-    plot_output(name=name, theta_i=theta_i, laser_offset=laser_offset, sample_x=sample_x, sample_y=sample_y, show_position=False, x_min=x_min, x_max=x_max,
-                y_min=y_min, y_max=y_max, substance=substance, show=show)
+    plot_output(name=name, wavelength=wavelength, theta_i=theta_i, laser_offset=laser_offset,
+                sample_x=sample_x, sample_y=sample_y, cell_x=cell_x, cell_y=cell_y, show_position=False,
+                x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max, substance=substance, show=show)

@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_output(name="", theta_i=45, laser_offset=0., sample_x=0., sample_y=0., show_position=False, x_min=-100., x_max=100., y_min=-100., y_max=100., substance="air", show=True):  # offset in inches, should be x-coord of center of PMT axis
+def plot_output(name="", wavelength=405., theta_i=45, laser_offset=0., sample_x=0., sample_y=0., cell_x=0., cell_y=0., show_position=False, x_min=-100., x_max=100., y_min=-100., y_max=100., substance="air", show=True):  # offset in inches, should be x-coord of center of PMT axis
 
     # Get command line arguments
     cmdArgs = sys.argv
@@ -115,11 +115,14 @@ def plot_output(name="", theta_i=45, laser_offset=0., sample_x=0., sample_y=0., 
                 x.append(phi_zeroed[i])
                 y.append(theta[i])
 
-        string = "theta_i: " + str(theta_i)
+        string = "theta_i: " + str(theta_i) + " degrees"
         string += "\nsubstance: " + str(substance)
-        string += "\nlaser offset: " + str(laser_offset) + " mm"
-        string += "\nsample_x: " + str(25.4 * sample_x) + " mm"
-        string += "\nsample_y: " + str(25.4 * sample_y) + " mm"
+        string += "\nwavelength: " + str(wavelength) + " nm"
+        string += "\nlaser offset: " + str(25.4 * laser_offset) + " mm"
+        string += "\nsample x: " + str(25.4 * sample_x) + " mm"
+        string += "\nsample y: " + str(25.4 * sample_y) + " mm"
+        string += "\ncell x: " + str(25.4 * cell_x) + " mm"
+        string += "\ncell y: " + str(25.4 * cell_y) + " mm"
 
         if len(x) == 0:
             print("NO PHOTONS IN GIVEN RANGE")
