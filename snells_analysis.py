@@ -54,38 +54,12 @@ cell_x = 0.
 cell_y = 0.
 laser_offset = 0.
 
-run_rat(name="nothing shifted", num_photons=num_photons, wavelength=wavelength, theta_i=theta_i, substance="water",
-        tube_included=True, angular_size=angular_size, laser_offset=laser_offset, sample_x=sample_x, sample_y=sample_y,
-        cell_x=cell_x, cell_y=cell_y, show=False, run=run, x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max)
+laser_offsets = [i / 25.4 for i in range(3)]
 
-sample_x = 0.
-sample_y = 0.
-cell_x = 1./25.4
-cell_y = 0.
-laser_offset = 0.
+for offset in laser_offsets:
 
-run_rat(name="cell shifted", num_photons=num_photons, wavelength=wavelength, theta_i=theta_i, substance="water",
-        tube_included=True, angular_size=angular_size, laser_offset=laser_offset, sample_x=sample_x, sample_y=sample_y,
-        cell_x=cell_x, cell_y=cell_y, show=False, run=run, x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max)
-
-sample_x = 1./25.4
-sample_y = 0.
-cell_x = 0.
-cell_y = 0.
-laser_offset = 0.
-
-run_rat(name="sample shifted", num_photons=num_photons, wavelength=wavelength, theta_i=theta_i, substance="water",
-        tube_included=True, angular_size=angular_size, laser_offset=laser_offset, sample_x=sample_x, sample_y=sample_y,
-        cell_x=cell_x, cell_y=cell_y, show=False, run=run, x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max)
-
-sample_x = 0.
-sample_y = 0.
-cell_x = 0.
-cell_y = 0.
-laser_offset = 1./25.4
-
-run_rat(name="laser shifted", num_photons=num_photons, wavelength=wavelength, theta_i=theta_i, substance="water",
-        tube_included=True, angular_size=angular_size, laser_offset=laser_offset, sample_x=sample_x, sample_y=sample_y,
-        cell_x=cell_x, cell_y=cell_y, show=False, run=run, x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max)
+	run_rat(name="laser shifted by " + str(offset * 25.4) + " mm", num_photons=num_photons, wavelength=wavelength, theta_i=theta_i, substance="water",
+	        tube_included=True, angular_size=angular_size, laser_offset=offset, sample_x=sample_x, sample_y=sample_y,
+	        cell_x=cell_x, cell_y=cell_y, show=False, run=run, x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max)
 
 plt.show()
