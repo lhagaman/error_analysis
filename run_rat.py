@@ -38,11 +38,11 @@ def run_rat(name="", num_photons=50000, theta_i=45, substance="air", wavelength=
         mac_file.write(mac_str)
         mac_file.close()
 
-        str_1 = "cd ~/Desktop/RAT_files/error_analysis\n"
-        str_1 += "cp error_analysis.geo ~/Desktop/RAT/rat-pac/data/error_analysis\n"
+        str_1 = "cd ~/Desktop/error_analysis\n"
+        str_1 += "cp error_analysis.geo ~/Desktop/install_rat/rat_stuff/rat-pac/data/error_analysis\n"
         os.system(str_1)
 
-        str_2 = "cd ~/Desktop/RAT_files/error_analysis\n"
+        str_2 = "cd ~/Desktop/error_analysis\n"
         str_2 += "rat photon_gun.mac"
         os.system(str_2)
 

@@ -36,7 +36,7 @@ run = True
 
 wavelength = 405.
 
-num_photons = 50000
+num_photons = 5000
 
 x_min = -2.
 x_max = 2.

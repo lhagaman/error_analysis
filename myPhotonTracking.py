@@ -13,7 +13,7 @@ def plot_output(name="", wavelength=405., theta_i=45, laser_offset=0., sample_x=
     # Get command line arguments
     cmdArgs = sys.argv
 
-    file_name = '~/Desktop/RAT_files/error_analysis/output.root'
+    file_name = '~/Desktop/error_analysis/output.root'
 
     fileIterator = rat.dsreader(file_name)
     print_all_steps = False
