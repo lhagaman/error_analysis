@@ -36,13 +36,13 @@ run = True
 
 wavelength = 405.
 
-num_photons = 5000
+num_photons = 50000
 
-x_min = -2.
-x_max = 2.
+x_min = -5.
+x_max = 5.
 
-y_min = -1.
-y_max = 1.
+y_min = -5.
+y_max = 5.
 
 angular_size = 30
 
@@ -52,14 +52,11 @@ sample_x = 0.
 sample_y = 0.
 cell_x = 0.
 cell_y = 0.
-laser_offset = 0.
+laser_offset = 2./25.4
 
-laser_offsets = [i / 25.4 for i in range(3)]
-
-for offset in laser_offsets:
-
-	run_rat(name="laser shifted by " + str(offset * 25.4) + " mm", num_photons=num_photons, wavelength=wavelength, theta_i=theta_i, substance="water",
-	        tube_included=True, angular_size=angular_size, laser_offset=offset, sample_x=sample_x, sample_y=sample_y,
+run_rat(name="laser shifted by " + str(laser_offset * 25.4) + " mm", num_photons=num_photons, wavelength=wavelength, theta_i=theta_i, substance="water",
+	        tube_included=False, angular_size=angular_size, laser_offset=laser_offset, sample_x=sample_x, sample_y=sample_y,
 	        cell_x=cell_x, cell_y=cell_y, show=False, run=run, x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max)
 
 plt.show()
+

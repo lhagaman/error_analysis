@@ -1,12 +1,12 @@
 
 import os
 from geo_generator import make_geometry
-from myPhotonTracking import plot_output
+from myPhotonTracking import plot_output, plot_angle
 
 
 def run_rat(name="", num_photons=50000, theta_i=45, substance="air", wavelength=405., sample_x=0., sample_y=0.,
             cell_x=0., cell_y=0.,  laser_distance=5., tube_included=True, angular_size=10., laser_offset=0.,
-            show=False, run=False, x_min=-100., x_max=100., y_min=-100., y_max=100.,):
+            show=False, run=False, plot=True, x_min=-100., x_max=100., y_min=-100., y_max=100., plot_angles=True):
 
     if run:
 
@@ -46,6 +46,15 @@ def run_rat(name="", num_photons=50000, theta_i=45, substance="air", wavelength=
         str_2 += "rat photon_gun.mac"
         os.system(str_2)
 
-    plot_output(name=name, wavelength=wavelength, theta_i=theta_i, laser_offset=laser_offset,
+    if plot:
+        plot_output(name=name, wavelength=wavelength, theta_i=theta_i, laser_offset=laser_offset,
+                sample_x=sample_x, sample_y=sample_y, cell_x=cell_x, cell_y=cell_y, show_position=False,
+                x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max, substance=substance, show=show)
+
+    if plot_angles:
+        plot_angle(volume_name="outer_angle_surface", name=name + " outer angles", wavelength=wavelength, theta_i=theta_i, laser_offset=laser_offset,
+                sample_x=sample_x, sample_y=sample_y, cell_x=cell_x, cell_y=cell_y, show_position=False,
+                x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max, substance=substance, show=show)
+        plot_angle(volume_name="inner_angle_surface", name=name + " inner angles", wavelength=wavelength, theta_i=theta_i, laser_offset=laser_offset,
                 sample_x=sample_x, sample_y=sample_y, cell_x=cell_x, cell_y=cell_y, show_position=False,
                 x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max, substance=substance, show=show)

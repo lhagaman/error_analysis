@@ -6,7 +6,7 @@ geoFileName = './error_analysis.geo'
 
 
 def make_geometry(theta_i, substance="air", tube_included=True, angular_size=20., sample_x=0., sample_y=0.,
-                  cell_x=0., cell_y=0., laser_offset=0.):
+                  cell_x=0., cell_y=0., laser_offset=0., angle_collecting_surfaces=True):
 
     sample_included = True
     tube_caps_included = False
@@ -31,8 +31,9 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=20.
 
     coherent_surface = True
 
-    tube_radius = 1
-    tube_wall_width = 0.125
+    tube_radius = 1.
+    #tube_wall_width = 0.125
+    tube_wall_width = 0.001
     tube_height = 1.8
 
     sample_radius = 0.5
@@ -42,13 +43,13 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=20.
     upper_tube_cap_height = 0.7
     lower_tube_cap_height = 0.9
 
-    laser_radius = 1.4 / 2
-    laser_length = 5
-    dist_from_laser_to_sample = 8
+    laser_radius = 1.4 / 2.
+    laser_length = 5.
+    dist_from_laser_to_sample = 8.
 
-    dist_from_table_to_sample = 8
+    dist_from_table_to_sample = 8.
 
-    post_radius = 0.5 / 2
+    post_radius = 0.5 / 2.
 
     masterString = ''
 
@@ -66,7 +67,14 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=20.
         fluid.center = {'x': cell_x, 'y': cell_y, 'z': 0.}
         fluid.material = substance
         masterString = fluid.writeToString(masterString)
-
+        
+        outer_fluid_surface = GS.border("outer_fluid_surface", world.name, fluid.name)
+        outer_fluid_surface.surface = 'quartz'
+        masterString = outer_fluid_surface.writeToString(masterString)
+        inner_fluid_surface = GS.border("inner_fluid_surface", fluid.name, world.name)
+        inner_fluid_surface.surface = 'quartz'
+        masterString = inner_fluid_surface.writeToString(masterString)
+        
     if tube_included:
         sapphire_tube = GS.tubeVolume("sapphire_tube", tube_radius, tube_height, tube_radius - tube_wall_width)
         sapphire_tube.colorVect = [0.658954714849, 0.802189023832, 0.994216568893, 0.2]
@@ -168,6 +176,28 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=20.
                                 (360. + 2. * theta_i - 90. - angular_size / 2.) % 360., angular_size)
         """
         masterString = surface.writeToString(masterString)
+
+    if angle_collecting_surfaces:
+        #height = 0.5
+        outer_distance = tube_radius + 0.1
+        inner_distance = tube_radius - tube_wall_width - 0.1
+
+        thickness = 0.01
+        angular_size_ = 10.
+
+        outer_surface = GS.tubeVolume('outer_angle_surface', outer_distance + thickness, height,
+                                outer_distance, (360. - 90. - angular_size_ / 2.) % 360.,
+                                angular_size_)
+        outer_surface.material = 'pmt_vacuum'
+        inner_surface = GS.tubeVolume('inner_angle_surface', inner_distance, height,
+                                inner_distance - thickness, (360. - 90. - angular_size_ / 2.) % 360.,
+                                angular_size_)
+        inner_surface.material = 'pmt_vacuum'
+        inner_surface.mother = fluid.name
+
+        masterString = outer_surface.writeToString(masterString)
+        masterString = inner_surface.writeToString(masterString)
+
 
     if tube_caps_included:
         upper_tube_cap = GS.tubeVolume('upper_tube_cap', tube_cap_radius, upper_tube_cap_height)
