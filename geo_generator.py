@@ -32,8 +32,7 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=20.
     coherent_surface = True
 
     tube_radius = 1.
-    #tube_wall_width = 0.125
-    tube_wall_width = 0.01
+    tube_wall_width = 0.125
     tube_height = 1.8
 
     sample_radius = 0.5
@@ -61,23 +60,8 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=20.
     world.center = {'x':0.,'y':0.,'z':0.}
     masterString = world.writeToString(masterString)
 
-    if fluid_included:
-        # added the 0.001 in order to make the surfaces interactions behave nicer
-        fluid = GS.tubeVolume("fluid", tube_radius - tube_wall_width - 0.001, tube_height)
-        fluid.colorVect = [0.4, 0.4, 0.994216568893, 0.2]
-        fluid.center = {'x': cell_x, 'y': cell_y, 'z': 0.}
-        fluid.material = substance
-        masterString = fluid.writeToString(masterString)
-        
-        outer_fluid_surface = GS.border("outer_fluid_surface", world.name, fluid.name)
-        outer_fluid_surface.surface = 'quartz'
-        masterString = outer_fluid_surface.writeToString(masterString)
-        inner_fluid_surface = GS.border("inner_fluid_surface", fluid.name, world.name)
-        inner_fluid_surface.surface = 'quartz'
-        masterString = inner_fluid_surface.writeToString(masterString)
-        
     if tube_included:
-        sapphire_tube = GS.tubeVolume("sapphire_tube", tube_radius, tube_height, tube_radius - tube_wall_width)
+        sapphire_tube = GS.tubeVolume("sapphire_tube", tube_radius, tube_height)
         sapphire_tube.colorVect = [0.658954714849, 0.802189023832, 0.994216568893, 0.2]
         sapphire_tube.center = {'x': cell_x, 'y': cell_y, 'z': 0.}
         sapphire_tube.material = 'sapphire'
@@ -89,6 +73,15 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=20.
         inner_tube_surface = GS.border("inner_tube_surface", sapphire_tube.name, world.name)
         inner_tube_surface.surface = 'quartz'
         masterString = inner_tube_surface.writeToString(masterString)
+
+    if fluid_included:
+        # added the 0.001 in order to make the surfaces interactions behave nicer
+        fluid = GS.tubeVolume("fluid", tube_radius - tube_wall_width, tube_height)
+        fluid.colorVect = [0.4, 0.4, 0.994216568893, 0.2]
+        fluid.center = {'x': cell_x, 'y': cell_y, 'z': 0.}
+        fluid.material = substance
+        fluid.mother = sapphire_tube.name
+        masterString = fluid.writeToString(masterString)
 
         outer_tube_fluid_surface = GS.border("outer_tube_fluid_surface", sapphire_tube.name, fluid.name)
         outer_tube_fluid_surface.surface = 'quartz'

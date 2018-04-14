@@ -38,11 +38,11 @@ wavelength = 405.
 
 num_photons = 50000
 
-x_min = -2.
-x_max = 2.
+x_min = -10.
+x_max = 10.
 
-y_min = -1.
-y_max = 1.
+y_min = -10.
+y_max = 10.
 
 angular_size = 30
 
@@ -52,40 +52,17 @@ sample_x = 0.
 sample_y = 0.
 cell_x = 0.
 cell_y = 0.
-laser_offset = 0.
+laser_offset = 0.5/25.4
 
-run_rat(name="nothing shifted", num_photons=num_photons, wavelength=wavelength, theta_i=theta_i, substance="water",
-        tube_included=True, angular_size=angular_size, laser_offset=laser_offset, sample_x=sample_x, sample_y=sample_y,
-        cell_x=cell_x, cell_y=cell_y, show=False, run=run, x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max)
+substance = "my_xe"
 
-sample_x = 0.
-sample_y = 0.
-cell_x = 1./25.4
-cell_y = 0.
-laser_offset = 0.
+laser_offset = [0., 0.5/25.4, 1./25.4]
 
-run_rat(name="cell shifted", num_photons=num_photons, wavelength=wavelength, theta_i=theta_i, substance="water",
-        tube_included=True, angular_size=angular_size, laser_offset=laser_offset, sample_x=sample_x, sample_y=sample_y,
-        cell_x=cell_x, cell_y=cell_y, show=False, run=run, x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max)
+for i in range(3):
 
-sample_x = 1./25.4
-sample_y = 0.
-cell_x = 0.
-cell_y = 0.
-laser_offset = 0.
-
-run_rat(name="sample shifted", num_photons=num_photons, wavelength=wavelength, theta_i=theta_i, substance="water",
-        tube_included=True, angular_size=angular_size, laser_offset=laser_offset, sample_x=sample_x, sample_y=sample_y,
-        cell_x=cell_x, cell_y=cell_y, show=False, run=run, x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max)
-
-sample_x = 0.
-sample_y = 0.
-cell_x = 0.
-cell_y = 0.
-laser_offset = 1./25.4
-
-run_rat(name="laser shifted", num_photons=num_photons, wavelength=wavelength, theta_i=theta_i, substance="water",
-        tube_included=True, angular_size=angular_size, laser_offset=laser_offset, sample_x=sample_x, sample_y=sample_y,
-        cell_x=cell_x, cell_y=cell_y, show=False, run=run, x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max)
+	run_rat(name="laser shifted by " + str(laser_offset[i] * 25.4) + " mm", num_photons=num_photons, wavelength=wavelength, theta_i=theta_i, 
+				substance=substance,
+		        tube_included=True, angular_size=angular_size, laser_offset=laser_offset[i], sample_x=sample_x, sample_y=sample_y,
+		        cell_x=cell_x, cell_y=cell_y, show=False, run=run, x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max)
 
 plt.show()

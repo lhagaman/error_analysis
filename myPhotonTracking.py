@@ -50,7 +50,7 @@ def plot_angle(volume_name="", name="", wavelength=405., theta_i=45, laser_offse
         filtered_phi = []
         filtered_theta = []
         for i in range(len(phi)):
-            if np.abs(phi[i]) < 5.:
+            if (x_min < np.abs(phi[i]) < x_max) and (y_min < np.abs(theta[i]) < y_max):
                 filtered_phi.append(phi[i])
                 filtered_theta.append(theta[i])
 
@@ -60,7 +60,14 @@ def plot_angle(volume_name="", name="", wavelength=405., theta_i=45, laser_offse
     d = laser_offset
 
     n_0 = 1
-    n_1 = 1.34378
+    if substance == "air":
+        n_1 = 1.
+    elif substance == "water":
+        n_1 = 1.34378
+    elif substance == "my_xe":
+        n_1 = 1.69
+    else:
+        print("INVALID MATERIAL")
 
     t = 180 / np.pi * (np.arcsin(d / R) - np.arcsin((n_0 / n_1) * (d / R)))
 
@@ -203,7 +210,8 @@ def plot_output(name="", wavelength=405., theta_i=45, laser_offset=0., sample_x=
                 x.append(phi_zeroed[i])
                 y.append(theta[i])
 
-        string = "theta_i: " + str(theta_i) + " degrees"
+        string = "mean horizontal angle: " + str(np.round(np.mean(x), 4)) + " degrees"
+        string += "\ntheta_i: " + str(theta_i) + " degrees"
         string += "\nsubstance: " + str(substance)
         string += "\nwavelength: " + str(wavelength) + " nm"
         string += "\nlaser offset: " + str(25.4 * laser_offset) + " mm"

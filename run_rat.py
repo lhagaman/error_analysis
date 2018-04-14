@@ -52,9 +52,11 @@ def run_rat(name="", num_photons=50000, theta_i=45, substance="air", wavelength=
                 x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max, substance=substance, show=show)
 
     if plot_angles:
+        """
         plot_angle(volume_name="outer_angle_surface", name=name + " outer angles", wavelength=wavelength, theta_i=theta_i, laser_offset=laser_offset,
                 sample_x=sample_x, sample_y=sample_y, cell_x=cell_x, cell_y=cell_y, show_position=False,
                 x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max, substance=substance, show=show)
+        """
         plot_angle(volume_name="inner_angle_surface", name=name + " inner angles", wavelength=wavelength, theta_i=theta_i, laser_offset=laser_offset,
                 sample_x=sample_x, sample_y=sample_y, cell_x=cell_x, cell_y=cell_y, show_position=False,
                 x_min=x_min, x_max=x_max, y_min=y_min, y_max=y_max, substance=substance, show=show)
