@@ -27,7 +27,7 @@ def run_rat(name="", num_photons=50000, theta_i=45, substance="air", wavelength=
 
         # energy = h*c/wavelength, use planck's constant in MeV
         energy = str(4.135668e-21 * 2.998e8 / (wavelength * 1e-9))
-        mac_str += "/generator/vtx/set opticalphoton  0  1  0 0.25 " + energy + " " + energy + "\n"
+        mac_str += "/generator/vtx/set opticalphoton  0  1  0 0.025 " + energy + " " + energy + "\n"
 
         dist_y = str(laser_distance * -25.4)
         dist_x = str(laser_offset * 25.4)

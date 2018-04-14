@@ -7,6 +7,6 @@
 /rat/proclast outroot
 /tracking/storeTrajectory 1
 /generator/add combo gun2:point
-/generator/vtx/set opticalphoton  0  1  0 0.25 3.06141547259e-06 3.06141547259e-06
-/generator/pos/set 2.0 -127.0 0
+/generator/vtx/set opticalphoton  0  1  0 0.025 3.06141547259e-06 3.06141547259e-06
+/generator/pos/set 0.5 -127.0 0
 /run/beamOn 50000

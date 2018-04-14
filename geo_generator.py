@@ -33,7 +33,7 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=20.
 
     tube_radius = 1.
     #tube_wall_width = 0.125
-    tube_wall_width = 0.001
+    tube_wall_width = 0.01
     tube_height = 1.8
 
     sample_radius = 0.5
@@ -62,7 +62,8 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=20.
     masterString = world.writeToString(masterString)
 
     if fluid_included:
-        fluid = GS.tubeVolume("fluid", tube_radius - tube_wall_width, tube_height)
+        # added the 0.001 in order to make the surfaces interactions behave nicer
+        fluid = GS.tubeVolume("fluid", tube_radius - tube_wall_width - 0.001, tube_height)
         fluid.colorVect = [0.4, 0.4, 0.994216568893, 0.2]
         fluid.center = {'x': cell_x, 'y': cell_y, 'z': 0.}
         fluid.material = substance
@@ -81,6 +82,20 @@ def make_geometry(theta_i, substance="air", tube_included=True, angular_size=20.
         sapphire_tube.center = {'x': cell_x, 'y': cell_y, 'z': 0.}
         sapphire_tube.material = 'sapphire'
         masterString = sapphire_tube.writeToString(masterString)
+
+        outer_tube_surface = GS.border("outer_tube_surface", world.name, sapphire_tube.name)
+        outer_tube_surface.surface = 'quartz'
+        masterString = outer_tube_surface.writeToString(masterString)
+        inner_tube_surface = GS.border("inner_tube_surface", sapphire_tube.name, world.name)
+        inner_tube_surface.surface = 'quartz'
+        masterString = inner_tube_surface.writeToString(masterString)
+
+        outer_tube_fluid_surface = GS.border("outer_tube_fluid_surface", sapphire_tube.name, fluid.name)
+        outer_tube_fluid_surface.surface = 'quartz'
+        masterString = outer_tube_fluid_surface.writeToString(masterString)
+        inner_tube_fluid_surface = GS.border("inner_tube_fluid_surface", fluid.name, sapphire_tube.name)
+        inner_tube_fluid_surface.surface = 'quartz'
+        masterString = inner_tube_fluid_surface.writeToString(masterString)
 
     if sample_included:
         sample = GS.tubeVolume('sample', sample_radius, sample_thickness)
